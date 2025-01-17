@@ -1,24 +1,45 @@
 function sortear(){
-    let quantidade = parseInt(document.getElementById('quantidade').value);
-    let de = parseInt(document.getElementById('de').value);
-    let ate = parseInt(document.getElementById('ate').value);
+    let quantidade =document.getElementById('quantidade').value || 0;
+    let de = document.getElementById('de').value || 0;
+    let ate = document.getElementById('ate').value || 0;
+    let sorteados =[];
+    let numero;
+    let totalDeNumeros = parseInt(ate - de);
 
-   let sorteados =[];
-   let numero;
-   
-   for (let i = 0; i < quantidade; i++){
-        numero = obterNumeroAleatorio(de, ate);
-        while(sorteados.includes(numero)){
-            numero = obterNumeroAleatorio(de, ate);
+    if (quantidade == 0 || de == 0 || ate == 0){
+        alert(`Os valores dos parametros não podem ser Zero `);
+    
+    }else if (totalDeNumeros < 0){
+        alert('O Campo Do número não pode Ser maior que o campo Até o número');
+        limpaCampo();
+        if (quantidade > 0){
+            document.getElementById('quantidade').value = quantidade;
         }
-        sorteados.push(numero);
-   }
-   let resultado=document.getElementById('resultado');
-   resultado.innerHTML=`<label class="texto__paragrafo">Números sorteados:  ${sorteados}</label>`;
-   alterarStatusBotao();
-} 
+    }else{
+        if (quantidade <= totalDeNumeros){
+            for (let i = 0; i < quantidade; i++){
+                numero = obterNumeroAleatorio(de, ate);
+                while(sorteados.includes(numero)){
+                    numero = obterNumeroAleatorio(de, ate);
+                }
+                sorteados.push(numero);
+            }
+            
+            let resultado=document.getElementById('resultado');
+            resultado.innerHTML=`<label class="texto__paragrafo">Números sorteados:  ${sorteados}</label>`;
+            alterarStatusBotao();       
+            
+        }else{
+            alert(`de acordo com os parâmetros inseridos A Quantidade de Números máxima é de ${totalDeNumeros}`);
+            document.getElementById('quantidade').value = '';
+            document.getElementById('de').value = '';
+            document.getElementById('ate').value = '';
+            document.getElementById('resultado').innerHTML = '<label class="texto__paragrafo">Números sorteados:  nenhum até agora</label>';
+        }
+    }
+}
 
-
+  
 function obterNumeroAleatorio(min, max){
     return Math.floor(Math.random() * (max - min + 1) )+ min;
 }
@@ -46,4 +67,10 @@ function reiniciar(){
     document.getElementById('ate').value = '';
     document.getElementById('resultado').innerHTML = '<label class="texto__paragrafo">Números sorteados:  nenhum até agora</label>';
     alterarStatusBotao();
+}
+
+function limpaCampo(){
+    document.getElementById('quantidade').value = '';
+    document.getElementById('de').value = '';
+    document.getElementById('ate').value = '';
 }
